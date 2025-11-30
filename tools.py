@@ -11,3 +11,6 @@ def getWeather(city:str)->str:
         speed of wind: {data["current"]["wind_kph"]} kph, Humidity is {data["current"]["humidity"]}%"
 
     return res
+TOOLS:dict = {
+    "getWeather": getWeather
+}
