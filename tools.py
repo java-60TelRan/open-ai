@@ -1,21 +1,27 @@
-import requests
+import json
+import re
+from system_rules import INNER_SYSTEM_CONTENT
 
-from ltr_evaluation import ltrEvaluation
-URL = "http://api.weatherapi.com/v1/current.json"
-API_KEY = "312f5712e6b047058f2200626252611"
-def getWeather(city:str)->str:
-    resp = requests.get(URL, {"key":API_KEY, "q":city})
-    res = f"{city} is wrong city"
-    if not resp.status_code == 400:
-        resp.raise_for_status()
-        data = resp.json()
-        res = f"Weather in {data["location"]["name"]}({data["location"]["country"]}): temperature is {data["current"]["temp_c"]}\u00B0C , {data["current"]["condition"]["text"]},\n\
-        speed of wind: {data["current"]["wind_kph"]} kph, Humidity is {data["current"]["humidity"]}%"
-    return res
-def ltrEval(expression: str):
-    res: float = ltrEvaluation(expression)
-    return res    
+def travelInfoProvider(countryFrom: str, countryTo: str, codeFrom: str):
+    from chat_request import chatRequest
+    messages: list[dict] = [
+        {"role":"system", "content": INNER_SYSTEM_CONTENT},
+        {"role":"user", "content": f"currency of {countryTo}"}
+    ]
+    resp = chatRequest(messages)
+    regex:str = r"\{.*\}"
+    match: re.Match = re.search(regex, resp, re.DOTALL)
+    res = None
+    if match:
+        try:
+            res = json.loads(match.group())
+        except Exception:
+            pass    
+       
+    
+    return json.dumps({"countryFrom": countryFrom, "countryTo":countryTo,\
+        "codeFrom":codeFrom, "codeTo": res["currency_code"], "exchangeRate":1})
+ 
 TOOLS:dict = {
-    "getWeather": getWeather,
-    "ltrEval": ltrEval
+    "travelInfoProvider": travelInfoProvider
 }
