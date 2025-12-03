@@ -1,7 +1,7 @@
 import requests
 import re
 import json
-from system_content import SYSTEM_CONTENT
+from system_content import INNER_SYSTEM_CONTENT
 from tools import TOOLS
 from thinking_dots import start_thinking_dots
 URL:str =  "http://localhost:11434/api/chat"
@@ -48,7 +48,7 @@ def main():
     messages = [
         {
             "role":"system",
-            "content": SYSTEM_CONTENT
+            "content": INNER_SYSTEM_CONTENT
         }
     ]
     print("Phi-3 simple chat. Type 'exit' for quit")
