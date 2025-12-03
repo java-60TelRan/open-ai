@@ -1,4 +1,6 @@
 import requests
+
+from ltr_evaluation import ltrEvaluation
 URL = "http://api.weatherapi.com/v1/current.json"
 API_KEY = "312f5712e6b047058f2200626252611"
 def getWeather(city:str)->str:
@@ -9,8 +11,11 @@ def getWeather(city:str)->str:
         data = resp.json()
         res = f"Weather in {data["location"]["name"]}({data["location"]["country"]}): temperature is {data["current"]["temp_c"]}\u00B0C , {data["current"]["condition"]["text"]},\n\
         speed of wind: {data["current"]["wind_kph"]} kph, Humidity is {data["current"]["humidity"]}%"
-
     return res
+def ltrEval(expression: str):
+    res: float = ltrEvaluation(expression)
+    return res    
 TOOLS:dict = {
-    "getWeather": getWeather
+    "getWeather": getWeather,
+    "ltrEval": ltrEval
 }
