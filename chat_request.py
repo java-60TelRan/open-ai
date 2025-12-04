@@ -18,8 +18,9 @@ def chatRequest(messages:dict)-> str:
     resp.raise_for_status()
     data = resp.json()
     return data["message"]["content"]
-def extractJSON(text: str) -> dict | None:
-    regex:str = r"\{.*tool.*arguments.*\}"
+def extractJSON(text: str, properties: list[str]) -> dict | None:
+    propsInRe = '.' + '.'.join(f"*{w}" for w in properties)
+    regex:str = fr"\{{{propsInRe}.*\}}"
     match: re.Match = re.search(regex, text, re.DOTALL)
     res = None
     if match:
@@ -38,7 +39,7 @@ def callTool(toolData: dict) -> str:
     return res    
 def processLLM(text: str) -> dict:
     res: dict = {"role":"assistant", "content":text}
-    toolData: dict | None = extractJSON(text)
+    toolData: dict | None = extractJSON(text, ["tool", "arguments"])
     if toolData:
         toolRes = callTool(toolData)
         if toolRes:
