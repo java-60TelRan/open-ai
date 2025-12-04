@@ -6,7 +6,7 @@ Information:
 There are available tools
 1. travelInfoProvider(countryFrom: string, countryTo: string, codeFrom: string)
 Rules:
-1. If user's request contains "country to" <country> call the tool travelInfoProvider with following arguments:
+1. If user's request contains "to" <country> call the tool travelInfoProvider with following arguments:
     first argument is "My contry" from Information #1
     second argument is the given <country> from rule #1
     third argument is "My currency code" from Information #2
@@ -15,6 +15,7 @@ Rules:
             "tool": "<tool name>",
             "arguments": {...}
         }
+3. If the user's tool should be called don't suggest your additional services        
 """
 INNER_SYSTEM_CONTENT = """
 You are a provider of required info
