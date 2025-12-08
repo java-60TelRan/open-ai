@@ -12,10 +12,10 @@
 - countryTo (string, required)<br>
 - capitalTo (string, optional (should exist only if iscapital in request is True, validation of it should be done in a middleware functionality))<br>
 - weather (string, optional (should exist only if isweather in request is True, validation of it should be done in a middleware functionality))<br>
-- currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
-- currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
-- currencyNameFrom (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
-- currencyNameTo (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
+- currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
+- currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
+- currencyNameFrom (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
+- currencyNameTo (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
 - exchangeRate (float , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
 ### endpoint GET "/travel/info"
 #### reponse body with following fields
@@ -23,11 +23,14 @@
 - countryTo (string, required)<br>
 - capitalTo (string, required)<br>
 - weather (string, required)<br>
-- currencyCodeFrom (string with length 3 symbols, required )
-- currencyCodeFrom (string with length 3 symbols, required)
-- currencyNameFrom (string , required)
-- currencyNameTo (string , required )
-- exchangeRate (float , required )
+- currencyCodeFrom (string with length 3 symbols, required )<br>
+- currencyCodeFrom (string with length 3 symbols, required)<br>
+- currencyNameFrom (string , required)<br>
+- currencyNameTo (string , required )<br>
+- exchangeRate (float , required )<br>
+### Logging (debug and info log messages in accordance with the common sense)
+
+
 
 
 
