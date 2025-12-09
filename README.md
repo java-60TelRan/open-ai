@@ -11,9 +11,9 @@
 - countryFrom (string, required)<br>
 - countryTo (string, required)<br>
 - capitalTo (string, optional (should exist only if iscapital in request is True, validation of it should be done in a middleware functionality))<br>
-- weather (string, optional (should exist only if isweather in request is True, validation of it should be done in a middleware functionality))<br>
+- weatherTo (string, optional (should exist only if isweather in request is True, validation of it should be done in a middleware functionality))<br>
 - currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
-- currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
+- currencyCodeTo (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
 - currencyNameFrom (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
 - currencyNameTo (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
 - exchangeRate (float , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
