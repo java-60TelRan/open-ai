@@ -18,6 +18,9 @@
 - currencyNameTo (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
 - exchangeRate (float , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
 ### endpoint GET "/travel/info"
+#### Query required parameters
+countryFrom<br>
+countryTo
 #### reponse body with following fields
 - countryFrom (string, required)<br>
 - countryTo (string, required)<br>
