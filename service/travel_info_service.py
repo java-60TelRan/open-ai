@@ -1,0 +1,54 @@
+import json
+
+from fastapi import HTTPException
+from api_services.exchange_rate_api import getExchangeRate
+from api_services.weather_api import getWeather
+from models.travel_request import TravelRequest
+from models.travel_response import TravelResponse
+from open_ai.chat_request import chatRequest
+from open_ai.system_rules import RULES
+from logger import logger
+from utils.functions import extractJSON
+
+
+def travel_full_info(countryFrom:str, countryTo:str) -> TravelResponse:
+   
+    respDict = openAiAccess(countryFrom, countryTo)
+    travelResp: TravelResponse = getResponse(TravelRequest(countryFrom=countryFrom,
+                                                           countryTo=countryTo,
+                                                           iscapital=True,
+                                                           iscurrency=True,
+                                                           isweather=True
+                                                           ), respDict)
+    return travelResp 
+
+def openAiAccess(countryFrom:str, countryTo: str):
+    messages: list[dict] = [
+    {"role": "system", "content": RULES["full"]},
+    {"role": "user", "content": f"from {countryFrom} to {countryTo}"}
+]
+    resp = chatRequest(messages)
+    logger.debug("response from open-ai is %s", resp)
+    respDict = extractJSON(resp, ["country_from", "country_to"])
+    if not respDict:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Wrong response from OpenAI {resp}"
+        )    
+    logger.debug("response converted to dict is %s", respDict)
+    return respDict                                           
+def getResponse(travelRequest: TravelRequest, respDict:dict)->TravelResponse:
+    return TravelResponse(countryFrom=respDict["country_from"],
+                                                countryTo=respDict["country_to"],
+                                                capitalTo=respDict["capital_to"] if travelRequest.iscapital else None,
+                                                currencyCodeFrom=respDict["currency_code_from"] if travelRequest.iscurrency else None,
+                                                currencyCodeTo=respDict["currency_code_to"] if travelRequest.iscurrency else None,
+                                                currencyNameFrom=respDict["currency_name_from"] if travelRequest.iscurrency else None,
+                                                currencyNameTo=respDict["currency_name_to"] if travelRequest.iscurrency else None,
+                                                weatherTo=getWeather(respDict["capital_to"])if travelRequest.isweather else None,
+                                                exchangeRate=getExchangeRate(respDict["currency_code_from"],
+                                                                             respDict["currency_code_to"]) if travelRequest.iscurrency else None)
+    
+def travel_info(travelRequest: TravelRequest):
+    respDict = openAiAccess(travelRequest.countryFrom, travelRequest.countryTo)
+    return getResponse(travelRequest, respDict)
