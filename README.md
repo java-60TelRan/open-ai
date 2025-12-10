@@ -1,40 +1,23 @@
-# HW#40
-## Write FastAPI endpoints with validation and logging
-### endpoint POST "/travel/info"
-#### request body with following fields
-- countryFrom (string, required)<br>
-- countryTo (string, required)<br>
-- iscapital (bool, required (true - a capital of the given countryTo should exist in a response, false - shouldn't exist))<br>
-- isweather (bool, required (true - a string containing current values of temperature, humidity, condition, wind speed in the given countryTo should exist in a response, false - shouldn't exist))<br>
-- iscurrency (bool, required (true - reponse should have fields related to currencies such as currencyCodeFrom, currencyCodeTo, currencyNameFrom, currencyNameTo, exchangeRate))
-#### reponse body with following fields
-- countryFrom (string, required)<br>
-- countryTo (string, required)<br>
-- capitalTo (string, optional (should exist only if iscapital in request is True, validation of it should be done in a middleware functionality))<br>
-- weatherTo (string, optional (should exist only if isweather in request is True, validation of it should be done in a middleware functionality))<br>
-- currencyCodeFrom (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
-- currencyCodeTo (string with length 3 symbols, optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
-- currencyNameFrom (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
-- currencyNameTo (string , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )<br>
-- exchangeRate (float , optional (should exist only if iscurrency in request is True, validation of it should be done in a middleware functionality) )
-### endpoint GET "/travel/info"
-#### Query required parameters
-countryFrom<br>
+# HW#41
+## Update class TravelRequest
+### there should be only one out of the following fields
 countryTo
-#### reponse body with following fields
-- countryFrom (string, required)<br>
-- countryTo (string, required)<br>
-- capitalTo (string, required)<br>
-- weather (string, required)<br>
-- currencyCodeFrom (string with length 3 symbols, required )<br>
-- currencyCodeFrom (string with length 3 symbols, required)<br>
-- currencyNameFrom (string , required)<br>
-- currencyNameTo (string , required )<br>
-- exchangeRate (float , required )<br>
-### Logging (debug and info log messages in accordance with the common sense)
-
-
-
+cityTo
+#### add custom validation for previous requirement
+#### update logic of creating TravelResponse
+if there is cityTo in request, response should contain both countryTo and cityTo<br>
+if there is cityTo in request, weather result should be for cityTo and currency code / name should be for countryTo
+if there is countryTo in request, response should contain only countryTo and weather result should be for capitalTo
+### there should be introduced authentication / authorization
+#### introduce API_KEYS
+two users with role "user" and different "username" values
+one admin with role "admin" and "username" as "admin"
+#### introduce dependency function for roles "user" and "admin"
+request POST "/travel/info" - dependency for role "user"
+request GET "/travel/info" - dependency for role "user"
+request GET "/users/statistics (new request) - dependency for role "admin"
+## Add new request
+request GET "/users/statistics" returns dictionary with a username as the key and count of requests done by the appropriate user of any role
 
 
 
