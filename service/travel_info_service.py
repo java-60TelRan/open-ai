@@ -22,10 +22,10 @@ def travel_full_info(countryFrom:str, countryTo:str) -> TravelResponse:
                                                            ), respDict)
     return travelResp 
 
-def openAiAccess(countryFrom:str, countryTo: str):
+def openAiAccess(countryFrom:str, countryTo: str|None = None, cityTo: str|None = None):
     messages: list[dict] = [
-    {"role": "system", "content": RULES["full"]},
-    {"role": "user", "content": f"from {countryFrom} to {countryTo}"}
+    {"role": "system", "content": RULES["countryTo" if countryTo else "cityTo"]},
+    {"role": "user", "content": f"from {countryFrom} to {countryTo if countryTo else cityTo}"}
 ]
     resp = chatRequest(messages)
     logger.debug("response from open-ai is %s", resp)
@@ -50,5 +50,5 @@ def getResponse(travelRequest: TravelRequest, respDict:dict)->TravelResponse:
                                                                              respDict["currency_code_to"]) if travelRequest.iscurrency else None)
     
 def travel_info(travelRequest: TravelRequest):
-    respDict = openAiAccess(travelRequest.countryFrom, travelRequest.countryTo)
+    respDict = openAiAccess(travelRequest.countryFrom, travelRequest.countryTo, travelRequest.cityTo)
     return getResponse(travelRequest, respDict)
