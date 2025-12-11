@@ -24,7 +24,7 @@ async def validation_middleware(request: Request, call_next):
     logger.debug("validation middleware received dictionary %s", travelRequest)
     resp = await call_next(request)
     response_raw_body, response_body = await extractResponseBody(resp)
-    if not isMatch(travelRequest, response_body):
+    if "detail" not in response_body and not isMatch(travelRequest, response_body):
         errMessage = f"request {travelRequest} doesn't match with response {response_body}"
         logger.error(errMessage)
         return JSONResponse(

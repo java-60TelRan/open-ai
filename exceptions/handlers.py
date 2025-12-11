@@ -8,11 +8,7 @@ from pydantic import ValidationError
 async def requestValidationHandler(req: Request, exc: RequestValidationError):
     return JSONResponse(
         status_code=400,
-        content={
-            "detail":exc.errors(),
-            
-            
-        }
+        content={"detail":str(exc)}
     )
 
 async def errorFromServer(req: Request, exc: ValidationError) :
