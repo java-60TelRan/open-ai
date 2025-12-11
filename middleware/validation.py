@@ -1,5 +1,6 @@
 import json
 from fastapi import HTTPException, Request
+from fastapi.responses import JSONResponse
 from logger import logger
 from middleware.common import extractResponseBody, rebuildResponse
 
@@ -24,10 +25,13 @@ async def validation_middleware(request: Request, call_next):
     resp = await call_next(request)
     response_raw_body, response_body = await extractResponseBody(resp)
     if not isMatch(travelRequest, response_body):
-        raise HTTPException(
+        errMessage = f"request {travelRequest} doesn't match with response {response_body}"
+        logger.error(errMessage)
+        return JSONResponse(
             status_code=500,
-            detail=f"request {travelRequest} doesn't match with response {travelResponse}"
+            content={"detail":errMessage}
         )
+       
     logger.debug("validation middleware got response %s", response_body)
     return rebuildResponse(resp, response_raw_body)
     
