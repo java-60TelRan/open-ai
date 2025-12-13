@@ -15,7 +15,7 @@ async def errorFromServer(req: Request, exc: ValidationError) :
     return JSONResponse(
         status_code=500,
         content={
-            "detail": exc.errors()
+            "detail": str(exc)
         }
         
     )  

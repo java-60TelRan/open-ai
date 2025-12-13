@@ -1,5 +1,5 @@
 import json
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from logger import logger
 from middleware.common import extractResponseBody, rebuildResponse
@@ -13,15 +13,22 @@ def isMatch(travelRequest: dict, travelResponse: dict)->bool:
     hasCapitalResponse = travelResponse.get("capitalTo") is not None
     hasWeatherResponse = travelResponse.get("weatherTo") is not None
     return isCapitalRequest == hasCapitalResponse and isCurrencyRequest == hasCurrencyResponse and isWeatherRequest == hasWeatherResponse
-    
 async def validation_middleware(request: Request, call_next):
-    requestBody = await request.body() if request.method == "POST" else None
-    travelRequest = json.loads(requestBody)
-    async def receive():
-        return {"type": "http.request", "body": requestBody}
+    if "info" not in request.url.path:
+        return await call_next(request)
+    travelRequest: dict = {
+        "isweather": True,
+        "iscurrency": True,
+        "iscapital": True
+    }
+    if request.method == "POST":
+        requestBody = await request.body() if request.method == "POST" else None
+        travelRequest = json.loads(requestBody)
+        async def receive():
+            return {"type": "http.request", "body": requestBody}
 
-    request = Request(request.scope, receive)
-    logger.debug("validation middleware received dictionary %s", travelRequest)
+        request = Request(request.scope, receive)
+        logger.debug("validation middleware received dictionary %s", travelRequest)
     resp = await call_next(request)
     response_raw_body, response_body = await extractResponseBody(resp)
     if "detail" not in response_body and not isMatch(travelRequest, response_body):
