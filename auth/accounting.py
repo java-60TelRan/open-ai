@@ -6,3 +6,5 @@ API_KEYS = {
 }
 def userStatistics():
     return {user["username"]:user["count"] for user in API_KEYS.values() }
+def incrementUsage(user: dict):
+    user["count"] += 1

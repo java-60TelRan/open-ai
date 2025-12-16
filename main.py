@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 
-from auth.accounting import userStatistics
+from auth.accounting import incrementUsage, userStatistics
 from auth.authentication import authentication
 from auth.authorization import authAdmin
 from exceptions.handlers import registerExceptionHandlers
@@ -24,12 +24,12 @@ async def travelInfoGetHandler(countryFrom:str, countryTo:str|None = None,
         raise RequestValidationError(e.errors())    
     logger.debug("API GET endpoint travel/info: countryFrom: %s, %s, user: %s", countryFrom,
                  f"countryTo: {countryTo}" if countryTo else f"cityTo: {cityTo}", user["username"])
-    user["count"] += 1
+    incrementUsage(UserWarning)
     return travel_info(travelRequest)
 @app.post("/travel/info", response_model=TravelResponse)
 async def travelInfoPostHandler(travelRequest: TravelRequest, user = Depends(authentication)):
     logger.debug("API POST endpoint travel/info: request: %s, user: %s", travelRequest, user["username"])
-    user["count"] += 1
+    incrementUsage(user)
     return travel_info(travelRequest)
 @app.get("/users/statistics")
 def getUserStatistics(user = Depends(authAdmin)):
